@@ -1,42 +1,44 @@
 import 'package:flutter/material.dart';
-import 'photo_detail_screen.dart';
 import '../models/photo.dart';
 import '../data/dummy_photos.dart';
+import 'photo_detail_screen.dart';
+import 'albums_screen.dart'; // 📌 추가
 
 class PhotoScreen extends StatelessWidget {
   const PhotoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 사진을 월별로 필터링 (예: id 1~6 → November, 7~10 → October)
-    final List<Photo> novemberPhotos =
-        dummyPhotos.where((photo) => photo.id <= 6).toList();
-    final List<Photo> octoberPhotos =
-        dummyPhotos.where((photo) => photo.id > 6).toList();
-
     return Scaffold(
       appBar: AppBar(title: const Text("Photos")),
       body: ListView(
+        padding: const EdgeInsets.all(12.0),
         children: [
           const Text(
-            "November",
+            "Gallery",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          _buildPhotoGrid(novemberPhotos),
+          _buildPhotoGrid(context, dummyPhotos),
           const SizedBox(height: 20),
-          const Text(
-            "October",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AlbumsScreen()),
+              );
+            },
+            child: const Text(
+              "Albums >",
+              style: TextStyle(fontSize: 18, color: Colors.purple),
+            ),
           ),
-          const SizedBox(height: 10),
-          _buildPhotoGrid(octoberPhotos),
         ],
       ),
     );
   }
 
-  Widget _buildPhotoGrid(List<Photo> photos) {
+  Widget _buildPhotoGrid(BuildContext context, List<Photo> photos) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
